@@ -3,6 +3,8 @@ detect-drupal-modules
 
 Detect what modules a Drupal site might have installed.
 
+## How it works
+
 The following snippets will sniff out which modules a Drupal site has downloaded, 
 by repeatedly making requests to `http://DRUPALSITE/sites/all/modules/MODULENAME/` 
 and seeing which come back 403 (Access Denied) rather than 404 (Not found).
@@ -18,7 +20,7 @@ To run the checks serially (can take a while!):
 
 ```
 export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules/ ; \
-  curl -s https://gist.github.com/dergachev/6640576/raw/top_500_drupal_modules.txt \
+  curl -s https://raw.github.com/dergachev/detect-drupal-modules/master/top_500_drupal_modules.txt \
   | head -n $LIMIT \
   | while read line; do echo $line "--" $(curl -s -I $URL_ROOT/$line/ | head -n 1) ; done \
   | sed -n -e '/403/s/ .*//p'
@@ -28,7 +30,7 @@ To run the checks in parallel (much faster; requires installing GNU Parallel):
 
 ```
 export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules/ ; \
-  curl -s https://gist.github.com/dergachev/6640576/raw/top_500_drupal_modules.txt \
+  curl -s https://raw.github.com/dergachev/detect-drupal-modules/master/top_500_drupal_modules.txt \
   | head -n $LIMIT \
   | parallel --keep-order 'echo {}--$(curl -s -I $URL_ROOT/\{}/ | head -n 1)' \
   | sed -n -e '/403/s/--.*//p'
