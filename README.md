@@ -75,22 +75,22 @@ jQuery('#project-usage-all-projects tbody a').each(function(i) {
 
 ## Installing GNU Parallel
 
-### On Mac OS X
+On Mac OS X:
 
 ```
 brew install parallel
 ```
 
-### On Ubuntu 12.04
+On Ubuntu 12.04:
 
 From http://askubuntu.com/a/227788/194314 and http://askubuntu.com/a/298598/194314
 
 ```
-echo "deb http://archive.ubuntu.com/ubuntu precise-backports main restricted universe multiverse" >> /etc/apt/sources.list
-apt-get update
+echo "deb http://archive.ubuntu.com/ubuntu precise-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+sudo apt-get update
 
 sudo apt-get install parallel
 sudo rm /etc/parallel/config
 ```
 
-See http://static.usenix.org/publications/login/2011-02/pdfs/Tange.pdf for GNU Parallel examples.
+See http://static.usenix.org/publications/login/2011-02/pdfs/Tange.pdf for GNU Parallel usage examples.
