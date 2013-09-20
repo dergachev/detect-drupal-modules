@@ -18,7 +18,7 @@ Copy and paste either of the following snippets into the terminal, adjusting:
 
 To run the checks serially (can take a while!):
 
-```
+```bash
 export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
   curl -s https://raw.github.com/dergachev/detect-drupal-modules/master/top_500_drupal_modules.txt \
   | head -n $LIMIT \
@@ -28,7 +28,7 @@ export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
 
 To run the checks in parallel (much faster; requires [installing GNU Parallel](#installing-gnu-parallel)):
 
-```
+```bash
 export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
   curl -s https://raw.github.com/dergachev/detect-drupal-modules/master/top_500_drupal_modules.txt \
   | head -n $LIMIT \
