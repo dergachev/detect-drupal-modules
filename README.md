@@ -26,7 +26,7 @@ export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
   | sed -n -e '/403/s/ .*//p'
 ```
 
-To run the checks in parallel (much faster; requires installing GNU Parallel):
+To run the checks in parallel (much faster; requires [installing GNU Parallel](#installing-gnu-parallel)):
 
 ```
 export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
