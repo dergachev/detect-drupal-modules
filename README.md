@@ -11,32 +11,25 @@ and seeing which come back 403 (Access Denied) rather than 404 (Not found).
 
 ## Usage
 
-Copy and paste either of the following snippets into the terminal, adjusting:
+Copy and paste the following snippet into the terminal, adjusting:
 
-* `LIMIT` is number of modules to check
 * `URL_ROOT` is the URL to the modules/* folder, eg `https://drupal.org/sites/all/modules` or `http://yourdrupalsite.com/sites/all/modules/contrib`
+* `LIMIT` is number of modules to check, out of the top 500
+* `PARALLEL` is the number of requests to make at a time
 
-To run the checks serially (can take a while!):
-
-```bash
-export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
-  curl -s https://raw.github.com/dergachev/detect-drupal-modules/master/top_500_drupal_modules.txt \
-  | head -n $LIMIT \
-  | while read line; do echo $line "--" $(curl -s -I $URL_ROOT/$line/ | head -n 1) ; done \
-  | sed -n -e '/403/s/ .*//p'
-```
-
-To run the checks in parallel (much faster; requires [installing GNU Parallel](#installing-gnu-parallel)):
+To run the checks:
 
 ```bash
-export LIMIT=100 URL_ROOT=https://drupal.org/sites/all/modules ; \
+export URL_ROOT=https://drupal.org/sites/all/modules LIMIT=100 PARALLEL=20 ; \
   curl -s https://raw.github.com/dergachev/detect-drupal-modules/master/top_500_drupal_modules.txt \
   | head -n $LIMIT \
-  | parallel --keep-order 'echo {}--$(curl -s -I $URL_ROOT/\{}/ | head -n 1)' \
+  | xargs -I '{}' -n1 -P $PARALLEL curl -sL -w "{}--%{http_code}\\n" $URL_ROOT/{} -o /dev/null \
   | sed -n -e '/403/s/--.*//p'
 ```
 
-In both cases, the output will be:
+Note that because these run in parallel, they're printed in no particular order.
+
+The output will be:
 
 ```
 views
@@ -72,25 +65,3 @@ jQuery('#project-usage-all-projects tbody a').each(function(i) {
   if(i<500) { console.log(name);}
 });
 ``` 
-
-## Installing GNU Parallel
-
-On Mac OS X:
-
-```
-brew install parallel
-```
-
-On Ubuntu 12.04:
-
-From http://askubuntu.com/a/227788/194314 and http://askubuntu.com/a/298598/194314
-
-```
-echo "deb http://archive.ubuntu.com/ubuntu precise-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-sudo apt-get update
-
-sudo apt-get install parallel
-sudo rm /etc/parallel/config
-```
-
-See http://static.usenix.org/publications/login/2011-02/pdfs/Tange.pdf for GNU Parallel usage examples.
